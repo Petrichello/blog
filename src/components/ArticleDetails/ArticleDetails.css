@@ -1,0 +1,159 @@
+.articles__item__details {
+  display: grid;
+  grid-template-columns: 634px auto 150px 45px;
+  grid-template-rows: 27px 27px 54px auto;
+  grid-template-areas:
+    "heading . username avatar"
+    "tags . date avatar"
+    "description . buttons buttons"
+    "text text text text";
+
+  width: 938px;
+  padding: 16px;
+  margin: 26px auto 54px;
+
+  background-color: #fff;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+}
+
+.item__heading__details {
+  grid-area: heading;
+
+  display: flex;
+}
+
+.title__details {
+  color: rgba(24, 144, 255, 1) !important;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.likes__details--unfavorite {
+  width: 34px;
+  height: 22px;
+
+  margin-left: 13px;
+
+  border: none;
+  background-color: #fff;
+
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 12px;
+  line-height: 22px;
+
+  text-align: end;
+
+  background-image: url("../../../public/images/heart1.svg");
+  background-repeat: no-repeat;
+  background-position: top 4px left 2px;
+}
+
+.likes__details--favorite {
+  width: 34px;
+  height: 22px;
+
+  margin-left: 13px;
+
+  border: none;
+  background-color: #fff;
+
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 12px;
+  line-height: 22px;
+
+  text-align: end;
+
+  background-image: url("../../../public/images/heart2.svg");
+  background-repeat: no-repeat;
+  background-position: top 4px left 2px;
+}
+
+.username__details {
+  grid-area: username;
+  text-align: end;
+  padding-right: 10px;
+
+  font-size: 18px;
+  line-height: 28px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.date__details {
+  grid-area: date;
+  text-align: end;
+  padding-right: 10px;
+
+  font-size: 12px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.avatar__details {
+  grid-area: avatar;
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+}
+
+.tags__details {
+  grid-area: tags;
+
+  display: flex;
+  gap: 5px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.tags__item__details {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  height: 20px;
+  padding: 3px;
+
+  font-size: 12px;
+  line-height: 14.52px;
+}
+
+.description__details {
+  grid-area: description;
+  color: rgba(0, 0, 0, 0.5);
+
+  font-size: 12px;
+  line-height: 22px;
+
+  padding-top: 5px;
+}
+
+.text {
+  grid-area: text;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.buttons__details {
+  grid-area: buttons;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.delete__details {
+  width: 78px;
+  height: 31px;
+
+  color: rgba(245, 34, 45, 1);
+
+  border: 1px solid rgba(245, 34, 45, 1);
+  border-radius: 5px;
+}
+
+.edit__details {
+  width: 65px;
+  height: 31px;
+
+  color: rgba(82, 196, 26, 1);
+
+  border: 1px solid rgba(82, 196, 26, 1);
+  border-radius: 5px;
+}

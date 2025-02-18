@@ -1,0 +1,219 @@
+body {
+  background-color: rgba(235, 238, 243, 1);
+  padding-bottom: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: rgba(255, 255, 255, 1);
+
+  height: 80px;
+  padding-inline: 22px;
+}
+
+.heading {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.heading a {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 27px;
+}
+
+.header__signIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #fff;
+  border: none;
+
+  height: 51px;
+  width: 109px;
+  padding: 0;
+
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.header__signUp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #fff;
+  border: 1px solid rgba(82, 196, 26, 1);
+  border-radius: 5px;
+
+  height: 51px;
+  width: 109px;
+  padding: 0;
+
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(82, 196, 26, 1);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.articles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+
+  padding-top: 26px;
+}
+
+.ant-pagination {
+  padding-bottom: 20px;
+}
+
+/* normalize */
+
+/**
+  Нормализация блочной модели
+ */
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+/**
+     Убираем внутренние отступы слева тегам списков,
+     у которых есть атрибут class
+    */
+:where(ul, ol):where([class]) {
+  padding-left: 0;
+}
+
+/**
+     Убираем внешние отступы body и двум другим тегам,
+     у которых есть атрибут class
+    */
+body,
+:where(blockquote, figure):where([class]) {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  background-color: #fff;
+  padding: 0;
+}
+
+.title button {
+  color: rgba(24, 144, 255, 1) !important;
+}
+
+/**
+     Убираем внешние отступы вертикали нужным тегам,
+     у которых есть атрибут class
+    */
+:where(h1, h2, h3, h4, h5, h6, p, ul, ol, dl):where([class]) {
+  margin-block: 0;
+}
+
+:where(dd[class]) {
+  margin-left: 0;
+}
+
+:where(fieldset[class]) {
+  margin-left: 0;
+  padding: 0;
+  border: none;
+}
+
+/**
+     Убираем стандартный маркер маркированному списку,
+     у которого есть атрибут class
+    */
+:where(ul[class]) {
+  list-style: none;
+}
+
+:where(address[class]) {
+  font-style: normal;
+}
+
+/**
+     Обнуляем вертикальные внешние отступы параграфа,
+     объявляем локальную переменную для внешнего отступа вниз,
+     чтобы избежать взаимодействие с более сложным селектором
+    */
+p {
+  --paragraphMarginBottom: 24px;
+
+  margin-block: 0;
+}
+
+/**
+     Внешний отступ вниз для параграфа без атрибута class,
+     который расположен не последним среди своих соседних элементов
+    */
+p:where(:not([class]):not(:last-child)) {
+  margin-bottom: var(--paragraphMarginBottom);
+}
+
+/**
+     Упрощаем работу с изображениями
+    */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/**
+     Наследуем свойства шрифт для полей ввода
+    */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+html {
+  /**
+       Пригодится в большинстве ситуаций
+       (когда, например, нужно будет "прижать" футер к низу сайта)
+      */
+  height: 100%;
+}
+
+/**
+     Плавный скролл
+    */
+html,
+:has(:target) {
+  scroll-behavior: smooth;
+}
+
+body {
+  /**
+       Пригодится в большинстве ситуаций
+       (когда, например, нужно будет "прижать" футер к низу сайта)
+      */
+  min-height: 100%;
+  /**
+       Унифицированный интерлиньяж
+      */
+  line-height: 1.5;
+}

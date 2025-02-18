@@ -1,0 +1,131 @@
+.articles__item {
+  display: grid;
+  grid-template-columns: 70% auto 20% 5%;
+  grid-template-rows: 25% 25% 50%;
+  grid-template-areas:
+    "heading . username avatar"
+    "tags . date avatar"
+    "description . . .";
+
+  width: 938px;
+  height: 140px;
+  padding: 16px;
+
+  background-color: #fff;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.item__heading {
+  grid-area: heading;
+
+  display: flex;
+}
+
+.title {
+  color: rgba(24, 144, 255, 1) !important;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.likes--unfavorite {
+  width: 34px;
+  height: 28px;
+
+  margin-left: 13px;
+
+  border: none;
+  background-color: #fff;
+
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 12px;
+  line-height: 22px;
+
+  text-align: end;
+
+  background-image: url("../../../public/images/heart1.svg");
+  background-repeat: no-repeat;
+  background-position: top 6px left 6px;
+}
+
+.likes--favorite {
+  width: 34px;
+  height: 28px;
+
+  margin-left: 13px;
+
+  border: none;
+  background-color: #fff;
+
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 12px;
+  line-height: 22px;
+
+  text-align: end;
+
+  background-image: url("../../../public/images/heart2.svg");
+  background-repeat: no-repeat;
+  background-position: top 6px left 6px;
+}
+
+.username {
+  grid-area: username;
+  width: 100%;
+  text-align: end;
+  margin: auto;
+  padding-right: 10px;
+
+  font-size: 18px;
+  line-height: 28px;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.date {
+  grid-area: date;
+  text-align: end;
+  padding-right: 10px;
+
+  font-size: 12px;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.avatar {
+  grid-area: avatar;
+  width: 75px;
+  height: 46px;
+
+  border-radius: 50%;
+}
+
+.tags {
+  grid-area: tags;
+
+  display: flex;
+  align-items: end;
+  gap: 5px;
+
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.tags__item {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+  height: 20px;
+  padding: 3px;
+
+  font-size: 12px;
+  line-height: 14.52px;
+}
+
+.description {
+  grid-area: description;
+
+  font-size: 12px;
+  line-height: 22px;
+
+  padding-top: 5px;
+}

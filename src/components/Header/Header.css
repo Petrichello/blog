@@ -1,0 +1,44 @@
+.header__logOut {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  border-radius: 5px;
+
+  height: 51px;
+  width: 109px;
+  padding: 0;
+
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(0, 0, 0, 0.75);
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.header__newArticle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #fff;
+  border: 1px solid rgba(82, 196, 26, 1);
+  border-radius: 5px;
+
+  height: 31px;
+  width: 112px;
+  padding: 6px 10px;
+
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(82, 196, 26, 1);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.user {
+  display: flex;
+  justify-content: space-between;
+}
