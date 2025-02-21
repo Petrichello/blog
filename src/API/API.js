@@ -74,8 +74,8 @@ export default class API {
       body: JSON.stringify(data),
     });
 
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
+    if (res.status === 422) {
+      return res.status;
     }
 
     return res.json();

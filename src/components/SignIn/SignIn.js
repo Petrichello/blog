@@ -4,6 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import { useState } from "react";
+import { Alert } from "antd";
 
 import API from "../../API/API";
 
@@ -17,6 +19,8 @@ const schema = yup.object().shape({
 });
 
 function SignIn({ history }) {
+  const [error, setError] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -34,8 +38,13 @@ function SignIn({ history }) {
       },
     };
     apiService.login(user).then((res) => {
-      localStorage.setItem("user", JSON.stringify(res.user));
-      history.push("/");
+      if (res === 422) {
+        setError(<Alert type="error" message="Error" description="Incorrect email or password" showIcon />);
+      } else {
+        setError(null);
+        localStorage.setItem("user", JSON.stringify(res.user));
+        history.push("/");
+      }
     });
   };
 
@@ -75,6 +84,7 @@ function SignIn({ history }) {
           Don’t have an account? <Link to="/sign-up">Sign Up</Link>.
         </p>
       </fieldset>
+      <div>{error}</div>
     </form>
   );
 }
