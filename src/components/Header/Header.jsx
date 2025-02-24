@@ -21,9 +21,16 @@ function Header({ history }) {
           <Link to="/articles">Realworld Blog</Link>
         </h1>
         <section className="menu">
-          <Link to="/new-article" className="header__newArticle">
+          <button
+            className="header__newArticle"
+            type="button"
+            onClick={() => {
+              dispatch(clearCurrentArticleAction());
+              history.push("/new-article");
+            }}
+          >
             Create article
-          </Link>
+          </button>
           <div className="user">
             <div className="username">{user.username}</div>
             <button

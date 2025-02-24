@@ -3,8 +3,10 @@ import "./Profile.css";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import { useState } from "react";
+import { Alert } from "antd";
 
-import API from "../../API/API";
+import { updateUser } from "../../API/API";
 
 const schema = yup.object().shape({
   username: yup
@@ -22,6 +24,9 @@ const schema = yup.object().shape({
 });
 
 function Profile({ history }) {
+  const [error, setError] = useState(null);
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
   const {
     register,
     handleSubmit,
@@ -31,13 +36,26 @@ function Profile({ history }) {
   });
 
   const onSubmit = (data) => {
-    const apiService = new API();
     const user = {
-      user: data,
+      user: {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        image: data.image || null,
+      },
     };
-    apiService.updateUser(user).then((response) => {
-      localStorage.setItem("user", JSON.stringify(response.user));
-      history.push("/");
+    updateUser(user).then((response) => {
+      if (response === 422) {
+        setError(
+          <Alert type="error" message="Error" description="The username or email data already exists" showIcon />
+        );
+      } else if (typeof response === "number") {
+        setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+      } else {
+        setError(null);
+        localStorage.setItem("user", JSON.stringify(response.user));
+        history.push("/");
+      }
     });
   };
 
@@ -52,6 +70,7 @@ function Profile({ history }) {
               required: "This field is required",
             })}
             name="username"
+            value={currentUser.username}
             placeholder="Username"
           />
         </label>
@@ -67,6 +86,8 @@ function Profile({ history }) {
                 message: "Invalid email address",
               },
             })}
+            name="email"
+            value={currentUser.email}
             placeholder="Email address"
           />
         </label>
@@ -78,25 +99,22 @@ function Profile({ history }) {
             {...register("password", {
               required: "This field is required",
             })}
+            name="password"
             type="password"
             placeholder="Password"
           />
         </label>
-        <div className="error">{errors?.firstname && <p>{errors?.firstname?.message}</p>}</div>
+        <div className="error">{errors?.password && <p>{errors?.password?.message}</p>}</div>
 
         <label>
           <p>Avatar image (url)</p>
-          <input
-            {...register("image", {
-              required: "This field is required",
-            })}
-            placeholder="Avatar image"
-          />
+          <input {...register("image")} placeholder="Avatar image" />
         </label>
         <div className="error">{errors?.image && <p>{errors?.image?.message}</p>}</div>
 
         <input type="submit" value="Save" />
       </fieldset>
+      <div>{error}</div>
     </form>
   );
 }

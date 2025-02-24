@@ -4,8 +4,10 @@ import { Link } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
+import { Alert } from "antd";
+import { useState } from "react";
 
-import API from "../../API/API";
+import { registerNewUser } from "../../API/API";
 
 const schema = yup.object().shape({
   username: yup
@@ -23,6 +25,8 @@ const schema = yup.object().shape({
 });
 
 function SignUp({ history }) {
+  const [error, setError] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -32,7 +36,6 @@ function SignUp({ history }) {
   });
 
   const onSubmit = (data) => {
-    const apiService = new API();
     const user = {
       user: {
         username: data.username,
@@ -40,9 +43,18 @@ function SignUp({ history }) {
         password: data.password,
       },
     };
-    apiService.registerNewUser(user).then((res) => {
-      localStorage.setItem("user", JSON.stringify(res.user));
-      history.push("/");
+    registerNewUser(user).then((res) => {
+      if (res === 422) {
+        setError(
+          <Alert type="error" message="Error" description="The username or email data already exists" showIcon />
+        );
+      } else if (typeof res === "number") {
+        setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+      } else {
+        setError(null);
+        localStorage.setItem("user", JSON.stringify(res.user));
+        history.push("/");
+      }
     });
   };
 
@@ -109,6 +121,7 @@ function SignUp({ history }) {
           Already have an account? <Link to="/sign-in">Sign In</Link>.
         </p>
       </fieldset>
+      <div>{error}</div>
     </form>
   );
 }

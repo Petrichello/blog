@@ -1,176 +1,144 @@
-export default class API {
-  async getArticles(number = 0) {
-    if (localStorage.getItem("user")) {
-      const res = await fetch(`https://blog-platform.kata.academy/api/articles/?limit=5&offset=${number}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`Couldn't fetch, received ${res.status}`);
-      }
-
-      return res.json();
-    }
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/?limit=5&offset=${number}`);
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async getArticle(slug) {
-    if (localStorage.getItem("user")) {
-      const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error(`Couldn't fetch, received ${res.status}`);
-      }
-
-      return res.json();
-    }
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`);
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async registerNewUser(data) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async login(data) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/users/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (res.status === 422) {
-      return res.status;
-    }
-
-    return res.json();
-  }
-
-  async updateUser(data) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/user`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async createArticle(data) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles`, {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async updateArticle(data, slug) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-
-    return res.json();
-  }
-
-  async deleteArticle(slug) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-  }
-
-  async favoriteArticle(slug) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
-      method: "POST",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-  }
-
-  async unfavoriteArticle(slug) {
-    const res = await fetch(`https://blog-platform.kata.academy/api/articles/${slug}/favorite`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!res.ok) {
-      throw new Error(`Couldn't fetch, received ${res.status}`);
-    }
-  }
+const url = "https://blog-platform.kata.academy/api";
+const unauthHeaders = { "Content-Type": "application/json" };
+let authHeaders;
+if (localStorage.getItem("user")) {
+  authHeaders = {
+    Authorization: `Token ${JSON.parse(localStorage.getItem("user")).token}`,
+    "Content-Type": "application/json",
+  };
 }
+
+export const getArticles = async (number = 0) => {
+  const res = await fetch(`${url}/articles/?limit=5&offset=${number}`, {
+    method: "GET",
+    headers: localStorage.getItem("user") ? authHeaders : unauthHeaders,
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const getArticle = async (slug) => {
+  const res = await fetch(`${url}/articles/${slug}`, {
+    method: "GET",
+    headers: localStorage.getItem("user") ? authHeaders : unauthHeaders,
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const registerNewUser = async (data) => {
+  const res = await fetch(`${url}/users`, {
+    method: "POST",
+    headers: unauthHeaders,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const login = async (data) => {
+  const res = await fetch(`${url}/users/login`, {
+    method: "POST",
+    headers: unauthHeaders,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const updateUser = async (data) => {
+  const res = await fetch(`${url}/user`, {
+    method: "PUT",
+    headers: authHeaders,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const createArticle = async (data) => {
+  const res = await fetch(`${url}/articles`, {
+    method: "POST",
+    headers: authHeaders,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const updateArticle = async (data, slug) => {
+  const res = await fetch(`${url}/articles/${slug}`, {
+    method: "PUT",
+    headers: authHeaders,
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return res.json();
+};
+
+export const deleteArticle = async (slug) => {
+  const res = await fetch(`${url}/articles/${slug}`, {
+    method: "DELETE",
+    headers: authHeaders,
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return "";
+};
+
+export const favoriteArticle = async (slug) => {
+  const res = await fetch(`${url}/articles/${slug}/favorite`, {
+    method: "POST",
+    headers: authHeaders,
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return "";
+};
+
+export const unfavoriteArticle = async (slug) => {
+  const res = await fetch(`${url}/articles/${slug}/favorite`, {
+    method: "DELETE",
+    headers: authHeaders,
+  });
+
+  if (!res.ok) {
+    return res.status;
+  }
+
+  return "";
+};

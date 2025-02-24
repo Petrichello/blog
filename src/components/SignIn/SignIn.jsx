@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 import { withRouter } from "react-router-dom/cjs/react-router-dom.min";
 import { useState } from "react";
 import { Alert } from "antd";
+import { useDispatch } from "react-redux";
 
-import API from "../../API/API";
+import { getArticles, login } from "../../API/API";
+import { addArticlesAction } from "../../store/articlesReducer";
 
 const schema = yup.object().shape({
   email: yup.string().email("Email address must be a valid email").required("Email address is a required field"),
@@ -20,6 +22,7 @@ const schema = yup.object().shape({
 
 function SignIn({ history }) {
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -30,22 +33,28 @@ function SignIn({ history }) {
   });
 
   const onSubmit = (data) => {
-    const apiService = new API();
     const user = {
       user: {
         email: data.email,
         password: data.password,
       },
     };
-    apiService.login(user).then((res) => {
-      if (res === 422) {
-        setError(<Alert type="error" message="Error" description="Incorrect email or password" showIcon />);
-      } else {
-        setError(null);
-        localStorage.setItem("user", JSON.stringify(res.user));
-        history.push("/");
-      }
-    });
+    login(user)
+      .then((res) => {
+        if (res === 422) {
+          setError(<Alert type="error" message="Error" description="Incorrect email or password" showIcon />);
+        } else if (typeof res === "number") {
+          setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+        } else {
+          setError(null);
+          localStorage.setItem("user", JSON.stringify(res.user));
+          getArticles(0).then((response) => {
+            dispatch(addArticlesAction(response));
+            history.push("/");
+          });
+        }
+      })
+      .catch(() => setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />));
   };
 
   return (
@@ -65,7 +74,7 @@ function SignIn({ history }) {
             placeholder="Email address"
           />
         </label>
-        <div className="error">{errors?.firstname && <p>{errors?.firstname?.message}</p>}</div>
+        <div className="error">{errors?.email && <p>{errors?.email?.message}</p>}</div>
 
         <label>
           <p>Password</p>
@@ -77,7 +86,7 @@ function SignIn({ history }) {
             placeholder="Password"
           />
         </label>
-        <div className="error">{errors?.firstname && <p>{errors?.firstname?.message}</p>}</div>
+        <div className="error">{errors?.password && <p>{errors?.password?.message}</p>}</div>
 
         <input type="submit" value="Login" />
         <p className="help">

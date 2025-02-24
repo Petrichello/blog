@@ -81,6 +81,21 @@ body {
   padding-bottom: 20px;
 }
 
+a {
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  background-color: #fff;
+  padding: 0;
+  cursor: pointer;
+}
+
+.title button {
+  color: rgba(24, 144, 255, 1) !important;
+}
+
 /* normalize */
 
 /**
@@ -107,20 +122,6 @@ body {
 body,
 :where(blockquote, figure):where([class]) {
   margin: 0;
-}
-
-a {
-  text-decoration: none;
-}
-
-button {
-  border: none;
-  background-color: #fff;
-  padding: 0;
-}
-
-.title button {
-  color: rgba(24, 144, 255, 1) !important;
 }
 
 /**

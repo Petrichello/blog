@@ -6,7 +6,6 @@
   margin-bottom: 100px;
 
   width: 384px;
-  /* height: 374px; */
 
   background-color: #fff;
   border-radius: 6px;
@@ -31,61 +30,3 @@
 input ~ div {
   border-color: rgba(245, 34, 45, 1);
 }
-
-/* fieldset {
-  display: flex;
-  flex-direction: column;
-
-  padding: 0;
-  border: none;
-}
-
-legend {
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 500;
-
-  margin-bottom: 20px;
-
-  text-align: center;
-}
-
-p {
-  margin: 0;
-}
-
-input[placeholder] {
-  width: 320px;
-  height: 40px;
-
-  border: 1px solid rgba(191, 191, 191, 1);
-  border-radius: 4px;
-  color: rgba(191, 191, 191, 1);
-
-  margin-bottom: 15px;
-  padding-left: 12px;
-}
-
-input[type="submit"] {
-  width: 320px;
-  height: 40px;
-
-  border: none;
-  border-radius: 4px;
-
-  background-color: rgba(24, 144, 255, 1);
-  color: rgba(255, 255, 255, 1);
-}
-
-p:last-child {
-  margin-top: 5px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 20px;
-
-  color: rgba(140, 140, 140, 1);
-}
-
-p a {
-  color: rgba(24, 144, 255, 1);
-} */

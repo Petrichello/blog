@@ -2,16 +2,17 @@ import { parseISO, format } from "date-fns";
 import "./ArticleDetails.css";
 import Markdown from "react-markdown";
 import uniqid from "uniqid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal } from "antd";
+import { Alert, Modal } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import classNames from "classnames";
 
 import { addArticlesAction, changeCurrentArticleAction } from "../../store/articlesReducer";
-import API from "../../API/API";
+import { deleteArticle, favoriteArticle, getArticle, getArticles, unfavoriteArticle } from "../../API/API";
 
 function ArticleDetails({ slug, history }) {
+  const [error, setError] = useState(null);
   const pageNumber = useSelector((state) => state.articlesReducer.pageNumber);
   let tags;
   const dispatch = useDispatch();
@@ -21,13 +22,30 @@ function ArticleDetails({ slug, history }) {
       icon: <ExclamationCircleFilled />,
       content: "Are you sure to delete this article?",
       onOk() {
-        const apiService = new API();
-        apiService.deleteArticle(slug).then(() => {
-          history.push("/");
-          apiService.getArticles(0).then((response) => {
-            dispatch(addArticlesAction(response));
-          });
-        });
+        deleteArticle(slug)
+          .then((res) => {
+            if (typeof res === "number") {
+              setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+            } else {
+              setError(null);
+              history.push("/");
+              getArticles(0)
+                .then((response) => {
+                  if (typeof response === "number") {
+                    setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+                  } else {
+                    setError(null);
+                    dispatch(addArticlesAction(response));
+                  }
+                })
+                .catch(() =>
+                  setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+                );
+            }
+          })
+          .catch(() =>
+            setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+          );
       },
       cancelText: "No",
       okText: "Yes",
@@ -35,14 +53,17 @@ function ArticleDetails({ slug, history }) {
   };
 
   useEffect(() => {
-    const apiService = new API();
-    apiService
-      .getArticle(slug)
+    getArticle(slug)
       .then((response) => {
-        dispatch(changeCurrentArticleAction(response.article));
+        if (typeof response === "number") {
+          setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+        } else {
+          setError(null);
+          dispatch(changeCurrentArticleAction(response.article));
+        }
       })
-      .catch((error) => {
-        throw error;
+      .catch(() => {
+        setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
       });
   }, [slug, dispatch]);
 
@@ -70,19 +91,54 @@ function ArticleDetails({ slug, history }) {
 
   if (article) {
     const changeFavorited = () => {
-      const apiService = new API();
       if (article.favorited) {
-        apiService.unfavoriteArticle(slug).then(() => {
-          apiService.getArticles((pageNumber - 1) * 5).then((response) => {
-            dispatch(addArticlesAction(response));
-          });
-        });
+        unfavoriteArticle(slug)
+          .then((res) => {
+            if (typeof res === "number") {
+              setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+            } else {
+              setError(null);
+              getArticles((pageNumber - 1) * 5)
+                .then((response) => {
+                  if (typeof response === "number") {
+                    setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+                  } else {
+                    setError(null);
+                    dispatch(addArticlesAction(response));
+                  }
+                })
+                .catch(() =>
+                  setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+                );
+            }
+          })
+          .catch(() =>
+            setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+          );
       } else {
-        apiService.favoriteArticle(slug).then(() => {
-          apiService.getArticles((pageNumber - 1) * 5).then((response) => {
-            dispatch(addArticlesAction(response));
-          });
-        });
+        favoriteArticle(slug)
+          .then((res) => {
+            if (typeof res === "number") {
+              setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+            } else {
+              setError(null);
+              getArticles((pageNumber - 1) * 5)
+                .then((response) => {
+                  if (response === "number") {
+                    setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+                  } else {
+                    setError(null);
+                    dispatch(addArticlesAction(response));
+                  }
+                })
+                .catch(() =>
+                  setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+                );
+            }
+          })
+          .catch(() =>
+            setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+          );
       }
     };
 
@@ -104,6 +160,7 @@ function ArticleDetails({ slug, history }) {
     if (localStorage.getItem("user") && article.author.username === JSON.parse(localStorage.getItem("user")).username) {
       return (
         <div className="articles__item__details">
+          <div>{error}</div>
           <div className="item__heading__details">
             <h3 className="title__details">{article.title}</h3>
             <button type="button" className={heart} onClick={changeFavorited}>
@@ -132,6 +189,7 @@ function ArticleDetails({ slug, history }) {
 
     return (
       <div className="articles__item__details">
+        <div>{error}</div>
         <div className="item__heading__details">
           <h3 className="title__details">{article.title}</h3>
           <button type="button" className={heart}>
@@ -149,7 +207,7 @@ function ArticleDetails({ slug, history }) {
       </div>
     );
   }
-  return <div>Error</div>;
+  return <div>Sorry, something went wrong</div>;
 }
 
 export default ArticleDetails;

@@ -2,10 +2,12 @@ import uniqid from "uniqid";
 import { parseISO, format } from "date-fns";
 import { withRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { Alert } from "antd";
 
-import API from "../../API/API";
 import { addArticlesAction } from "../../store/articlesReducer";
 import "./Article.css";
+import { favoriteArticle, getArticles, unfavoriteArticle } from "../../API/API";
 
 function Article({
   author,
@@ -19,6 +21,7 @@ function Article({
   history,
   pageNumber,
 }) {
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const onItemSelected = () => {
     history.push(`/articles/${slug}/`);
@@ -27,19 +30,45 @@ function Article({
   const heart = favorited ? "likes--favorite" : "likes--unfavorite";
 
   const changeFavorited = () => {
-    const apiService = new API();
     if (favorited) {
-      apiService.unfavoriteArticle(slug).then(() => {
-        apiService.getArticles((pageNumber - 1) * 5).then((response) => {
-          dispatch(addArticlesAction(response));
-        });
-      });
+      unfavoriteArticle(slug)
+        .then((res) => {
+          if (typeof res === "number") {
+            setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+          } else {
+            setError(null);
+            getArticles((pageNumber - 1) * 5).then((response) => {
+              dispatch(addArticlesAction(response));
+            });
+          }
+        })
+        .catch(() =>
+          setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+        );
     } else {
-      apiService.favoriteArticle(slug).then(() => {
-        apiService.getArticles((pageNumber - 1) * 5).then((response) => {
-          dispatch(addArticlesAction(response));
-        });
-      });
+      favoriteArticle(slug)
+        .then((res) => {
+          if (typeof res === "number") {
+            setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+          } else {
+            setError(null);
+            getArticles((pageNumber - 1) * 5)
+              .then((response) => {
+                if (response === "number") {
+                  setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />);
+                } else {
+                  setError(null);
+                  dispatch(addArticlesAction(response));
+                }
+              })
+              .catch(() =>
+                setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+              );
+          }
+        })
+        .catch(() =>
+          setError(<Alert type="error" message="Error" description="Sorry, something went wrong" showIcon />)
+        );
     }
   };
 
@@ -77,6 +106,7 @@ function Article({
 
   return (
     <li className="articles__item">
+      <div>{error}</div>
       <div className="item__heading">
         <h3 className="title">
           <button type="button" onClick={onItemSelected}>
